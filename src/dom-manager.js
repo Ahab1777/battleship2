@@ -27,17 +27,93 @@ export function render(match){
 
 
     //2 - Render player grid
-    const playerGrid = document.querySelector('.player-container');
     const playerSquaresNode = document.querySelectorAll('.player-container .square');
     playerSquaresNode.forEach(square => {
-        const position = square.getAttribute('data-pos');
-        const [row, col] = forceCoordinateToArray(position);
+        const coordinate = square.getAttribute('data-pos');
+        const squareAtCoordinate = player.gameboard.getSquareAt(coordinate);
+        const board = player.gameboard
+        const shipAtCoordinate = board.getShipAt(coordinate);
+        //1 - Intact ship
+        if (shipAtCoordinate && !shipAtCoordinate.isSunk) {
+            square.classList.add('ship');
+        }
+        //2 - is hit - missed
+        if (board.isMiss(coordinate)) {
+            square.classList.add('miss')
+        }
+        //3 - is hit - ship hit
+        if (shipAtCoordinate && board.isSquareHit(coordinate)) {
+            square.classList.add('hit')
+            square.classList.remove('ship');
+        }
+        //4 - is hit - sunk
+        if (shipAtCoordinate && shipAtCoordinate.isSunk) {
+            square.classList.add('sunk');
+            square.classList.remove('ship');
 
-        const gameboardSquare = player.gameboard._board[row][col]
+        }
 
+    });
+
+    //3 - Render computer grid
+    const computerSquareNodeList = document.querySelectorAll(`.computer-container .square`);
+    computerSquareNodeList.forEach(square => {
+        const coordinate = square.getAttribute('data-pos');
+        const board = computer.gameboard
+        const squareAtCoordinate = computer.gameboard.getSquareAt(coordinate);
+        const boardSquare = computer.gameboard._board[row][col]
+
+        //Square logic
+        //1 - is hit - missed
+        if (board.isMiss(coordinate)) {
+            square.classList.add('miss')
+        }
+        //2 - is hit - ship hit
+        if (board.isSquareHit(coordinate) && board.getShipAt(coordinate)) {
+            square.classList.add('hit')
+        }
+        //3 - is hit - sunk
+        if (board.getShipAt(coordinate)?.sunkStatus) {
+            square.classList.add('sunk');
+        }
+        
 
     })
+}
 
+export function resetDOM(match){
+    //1 - Reset all square
+    //1.1 - Get square classes back to only 'square'
+    const allSquares = document.querySelectorAll('.square');
+    allSquares.forEach(square => {
+        square.className = 'square';
+    })
+
+    //1.2 - Remove all listeners from squares by cloning them and replacing the original by the clone
+    allSquares.forEach(square => {
+        const newSquare = square.cloneNode(true);
+        square.parentNode.replaceChild(newSquare, square)
+    })
+
+    //2 - Empty docked ships fleet-container and refill it with standardFleet
+    const fleet = document.querySelector('.fleet');
+    fleet.innerHTML = '';
+    match.standardFleet.forEach((ship) => {
+        const newShipElement = document.createElement('div');
+        newShipElement.setAttribute('draggable', 'true')
+        newShipElement.dataset.size = ship.size;
+        newShipElement.dataset.docked = true;
+        newShipElement.dataset.direction = 'vertical';
+        newShipElement.classList.add('vertical');
+        newShipElement.id = ship.id;
+        newShipElement.addEventListener('dragstart', dragStart);
+        newShipElement.addEventListener('dragend', dragEnd)
+        fleet.append(newShipElement)
+    })
+
+    //3 - Clear game status display
+    const display = document.querySelector('.game-status');
+    display.textContent = '';
 
 
 }

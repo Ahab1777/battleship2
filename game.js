@@ -10,6 +10,28 @@ export default class Game{
         this.defendingPlayer = computerPlayer;
         this.gameHasEnded = false;
         this.winner = null;
+        this.standardFleet = [
+            {
+              type: "carrier",
+              size: 5,
+            },
+            {
+              type: "battleship",
+              size: 4,
+            },
+            {
+              type: "cruiser",
+              size: 3,
+            },
+            {
+              type: "submarine",
+              size: 3,
+            },
+            {
+              type: "destroyer",
+              size: 2,
+            },
+          ];
     }
 
     togglePlayers(){
