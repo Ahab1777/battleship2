@@ -1,4 +1,5 @@
-import { forceCoordinateToArray } from "./utils";
+import { forceCoordinateToArray } from "./utils.js";
+import { dragEnd, dragStart } from "./utils.js";
 
 export function render(match){
     //TODO display enemy fleet remaining
@@ -22,8 +23,9 @@ export function render(match){
     }
 
     //1.2 - Create node of ship elements
+    match.standardFleet.forEach(ship => {
 
-
+    })
 
 
     //2 - Render player grid
@@ -49,9 +51,9 @@ export function render(match){
         if (shipAtCoordinate && shipAtCoordinate.isSunk) {
             square.classList.add('sunk');
             square.classList.remove('ship');
-
+            
         }
-
+        
     });
 
     //3 - Render computer grid
@@ -97,14 +99,26 @@ export function resetDOM(match){
     fleet.innerHTML = '';
     match.standardFleet.forEach((ship) => {
         const newShipElement = document.createElement('div');
+        const shipSize = ship.size;
         newShipElement.setAttribute('draggable', 'true')
-        newShipElement.dataset.size = ship.size;
+        newShipElement.dataset.size = shipSize;
         newShipElement.dataset.docked = true;
         newShipElement.dataset.direction = 'vertical';
         newShipElement.classList.add('vertical');
+        newShipElement.classList.add('docked-ship')
         newShipElement.id = ship.id;
+        console.log("🚀 ~ match.standardFleet.forEach ~ ship.id:", ship.id)
+        
         newShipElement.addEventListener('dragstart', dragStart);
         newShipElement.addEventListener('dragend', dragEnd)
+
+        //Fill the ship with squares
+        for (let i = 0; i < shipSize; i++) {
+            const squareElement = document.createElement("div");
+            squareElement.classList.add('square', 'ship');
+            newShipElement.appendChild(squareElement);
+        }
+        //Add ship to the fleet
         fleet.append(newShipElement)
     })
 

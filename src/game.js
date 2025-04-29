@@ -1,5 +1,5 @@
 import Ship from "./ship.js";
-import { arrayToString, forceCoordinateToArray, isCoordinateOutOfBounds } from "./utils.js";
+import { stringToArray, arrayToString, forceCoordinateToArray, isCoordinateOutOfBounds } from "./utils.js";
 
 
 export default class Game{
@@ -12,23 +12,23 @@ export default class Game{
         this.winner = null;
         this.standardFleet = [
             {
-              type: "carrier",
+              id: "carrier",
               size: 5,
             },
             {
-              type: "battleship",
+              id: "battleship",
               size: 4,
             },
             {
-              type: "cruiser",
+              id: "cruiser",
               size: 3,
             },
             {
-              type: "submarine",
+              id: "submarine",
               size: 3,
             },
             {
-              type: "destroyer",
+              id: "destroyer",
               size: 2,
             },
           ];
@@ -41,8 +41,7 @@ export default class Game{
     }
 
     randomCoordinate(shipSize = null, originCoordinate = null){//shipSize and originCoordinate for uses in ship placement
-        const columns = 'ABCDEFGHIJ';
-        const rows = 10;
+        
         let randomCoordinate;
 
         if (originCoordinate) {
@@ -90,17 +89,19 @@ export default class Game{
             } while(
                 isCoordinateOutOfBounds(randomCoordinate) ||
                 isCoordinateOutOfBounds(randomCoordinate) ||
-                this.defendingPlayer.gameboard.squareHitStatus(randomCoordinate)
+                this.defendingPlayer.gameboard.isSquareHit(randomCoordinate)
             )
             return randomCoordinate
         }
 
+        const columns = 'ABCDEFGHIJ';
+        const rows = 10;
         do {//Generate random coordinate
             const randomColumn = columns[Math.floor(Math.random() * columns.length)];
             const randomRow = Math.floor(Math.random() * rows) + 1;
             randomCoordinate = `${randomColumn}${randomRow}`;
         } while (//If coordinate is already hit, try again
-            this.defendingPlayer.gameboard.isQuareHit(randomCoordinate)
+            this.defendingPlayer.gameboard.isSquareHit(randomCoordinate)
         );
         return randomCoordinate;
     }
