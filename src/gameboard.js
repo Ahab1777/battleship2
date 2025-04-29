@@ -113,7 +113,7 @@ export default class Gameboard{
     }
 
     isFleetSunk() {
-        return this._fleet.length > 0 && this._fleet.every(ship => ship.sunkStatus);
+        return this._fleet.length > 0 && this._fleet.every(ship => ship.isSunk);
     }
 
     getShipAt(coordinate){

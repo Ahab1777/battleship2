@@ -100,5 +100,20 @@ describe('Gameboard', () => {
         expect(submarine.isSunk).toBe(true)
     })
 
+    test('isFleetSunk', () => {
+        const submarine = new Ship(3)
+        const destroyer = new Ship(2)
+        gameboard.placeShip(submarine, 'D4', 'F4')
+        gameboard.placeShip(destroyer, 'J4', 'J5')
+        expect(gameboard.isFleetSunk()).toBe(false)
+        gameboard.receiveAttack('D4')
+        gameboard.receiveAttack('E4')
+        gameboard.receiveAttack('F4')
+        expect(gameboard.isFleetSunk()).toBe(false)
+        gameboard.receiveAttack('J4')
+        gameboard.receiveAttack('J5')
+        expect(gameboard.isFleetSunk()).toBe(true)
+    })
+
 
 })
