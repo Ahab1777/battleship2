@@ -1,4 +1,3 @@
-
 export default class Ship{
     constructor(length){
         this._length = length;
