@@ -20,6 +20,11 @@ export default class Gameboard{
         square.hitSquare();
     }
 
+    getSquareAt(coordinate){
+        const convertedCoordinate = forceCoordinateToArray(coordinate);
+        return this._board[convertedCoordinate[0], convertedCoordinate[1]]
+    }
+
     isMiss(coordinate){
         const convertedCoordinate = forceCoordinateToArray(coordinate)
         const hitStatus = this.isSquareHit(coordinate)
