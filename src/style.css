@@ -1,0 +1,228 @@
+/* Global */
+
+:root {
+    --square-side: 40px;
+    
+}
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: cadetblue;
+}
+
+/* Display */
+
+.game-display {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr, 1fr;
+}
+
+.game-status {
+    grid-area: 1 / 1 / 2 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    color: white;
+}
+
+.new-game-btn-container, .random-positions-btn-container, .flip-btn-container {
+    grid-template-columns:auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
+button{
+    background-color: darkblue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* make button react when hovered and clicked */
+button:hover {
+    background-color: blue;
+}
+button:active {
+    background-color: darkblue;
+}
+button:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+button:focus {
+    outline: none;
+}
+button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+.header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    color: white;
+}
+
+.fleet{
+    justify-self: center;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: calc(6 * var(--square-side));
+    height: calc(6 * var(--square-side));
+}
+
+/* Docked ships */
+.docked-ship {
+    width: fit-content;
+    height: fit-content;
+    display:flex;
+}
+
+.horizontal {
+    flex-direction: row;
+}
+
+.vertical {
+    flex-direction: column;
+}
+
+
+
+
+
+/* Battle grid */
+
+.battle-container{
+    display: flex;
+    flex-wrap: wrap;
+    /* gap? */
+}
+
+.team-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-container, .computer-container{
+    display: grid;
+    grid-template-columns: repeat(11, var(--square-side));
+    grid-template-rows: repeat(11, var(--square-side));
+    margin: 20px;
+}
+
+.columns-container{
+    grid-area: 1 / 2 / 2 / 12;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.column {
+    width: var(--square-side);
+    height: var(--square-side);
+    border: 1px solid red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: black;
+}
+
+
+
+.rows-container{
+    grid-area: 2 / 1 / 12 / 2;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.row {
+    width: var(--square-side);
+    height: var(--square-side);
+    border: 1px solid blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: black;
+}
+
+.board{
+    grid-area: 2 / 2 / 12 / 12;
+    display: grid;
+    grid-template-columns: repeat(10, var(--square-side));
+    grid-template-rows: repeat(10, var(--square-side));
+    grid-auto-flow: column;
+}
+
+
+.square{
+    width: var(--square-side);
+    height: var(--square-side);
+    border: 1px solid black;
+    display: flex;
+    background-color: gainsboro;
+    justify-content: center;
+    align-items: center;
+}
+
+.player-name-header {
+    text-align: center;    
+}
+
+.miss {
+    background-color: royalblue;
+}
+
+.hit {
+    background-color: red;
+}
+
+.sunk {
+    background-color: darkred;
+}
+
+.ship{
+    background-color: darkgreen;
+}
+
+.invalid-zone{
+    border: dashed 3px rgb(255, 0, 0);
+
+}
+
+.square:not(.miss):not(.hit):not(.sunk):hover {
+    cursor: pointer;
+}
+
+/* Drag and Drop */
+
+.drag-over {
+    border: dashed 3px blue;
+}
+
+.hide {
+    display: none;
+}
+
+.dragging {
+    opacity: 0.5;
+}
+

@@ -1,5 +1,5 @@
-import Ship from "./src/ship";
-import { arrayToString, forceCoordinateToArray, isCoordinateOutOfBounds } from "./src/utils";
+import Ship from "./ship.js";
+import { arrayToString, forceCoordinateToArray, isCoordinateOutOfBounds } from "./utils.js";
 
 
 export default class Game{
@@ -105,7 +105,7 @@ export default class Game{
         return randomCoordinate;
     }
 
-    positionShips(standardFleet){
+    positionShips(standardFleet = this.standardFleet){
 
         //Positioning computer ships - random
         standardFleet.forEach((battleship) => {

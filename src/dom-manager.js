@@ -30,7 +30,6 @@ export function render(match){
     const playerSquaresNode = document.querySelectorAll('.player-container .square');
     playerSquaresNode.forEach(square => {
         const coordinate = square.getAttribute('data-pos');
-        const squareAtCoordinate = player.gameboard.getSquareAt(coordinate);
         const board = player.gameboard
         const shipAtCoordinate = board.getShipAt(coordinate);
         //1 - Intact ship
@@ -60,8 +59,6 @@ export function render(match){
     computerSquareNodeList.forEach(square => {
         const coordinate = square.getAttribute('data-pos');
         const board = computer.gameboard
-        const squareAtCoordinate = computer.gameboard.getSquareAt(coordinate);
-        const boardSquare = computer.gameboard._board[row][col]
 
         //Square logic
         //1 - is hit - missed

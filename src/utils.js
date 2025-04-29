@@ -1,4 +1,4 @@
-import Ship from "./ship";
+import Ship from "./ship.js";
 
 export function stringToArray(string) {
     const rowString = string[0]

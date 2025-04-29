@@ -1,5 +1,5 @@
-import Ship from "./ship";
-import { isArrayOutOfBounds, isStringOutOfBounds, stringToArray, arrayToString, forceCoordinateToArray } from "./utils";
+import Ship from "./ship.js";
+import { isArrayOutOfBounds, isStringOutOfBounds, stringToArray, arrayToString, forceCoordinateToArray } from "./utils.js";
 
 export default class Gameboard{
     constructor(){
