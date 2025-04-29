@@ -1,5 +1,5 @@
 import Ship from "./ship";
-import { isArrayOutOfBounds, isStringOutOfBounds, stringToArray, arrayToString } from "./utils";
+import { isArrayOutOfBounds, isStringOutOfBounds, stringToArray, arrayToString, forceCoordinateToArray } from "./utils";
 
 export default class Gameboard{
     constructor(){
@@ -14,31 +14,15 @@ export default class Gameboard{
     }
 
     receiveAttack(coordinate) {
-        let convertedCoordinate;
-        if (typeof coordinate === 'string') {
-            convertedCoordinate = stringToArray(coordinate);
-        } else if (Array.isArray(coordinate)) {
-            convertedCoordinate = coordinate;
-        } else {
-            throw new Error('Invalid coordinate format. Coordinate must be either a string or an array.');
-        }
-
+        const convertedCoordinate = forceCoordinateToArray(coordinate)
         const [row, col] = convertedCoordinate;
         const square = this._board[row][col];
         square.hitSquare();
     }
 
     isMiss(coordinate){
-        let convertedCoordinate;
-        if (typeof coordinate === 'string') {
-            convertedCoordinate = stringToArray(coordinate);
-        } else if (Array.isArray(coordinate)) {
-            convertedCoordinate = coordinate;
-        } else {
-            throw new Error('Invalid coordinate format. Coordinate must be either a string or an array.');
-        }
-
-        const hitStatus = this._board[convertedCoordinate[0]][convertedCoordinate[1]].hitStatus;
+        const convertedCoordinate = forceCoordinateToArray(coordinate)
+        const hitStatus = this.isSquareHit(coordinate)
 
         const hasShip = this._board[convertedCoordinate[0]][convertedCoordinate[1]]?.ship ? true : false;
         
@@ -52,21 +36,17 @@ export default class Gameboard{
 
     }
 
+    isSquareHit(coordinate){
+        const convertedCoordinate = forceCoordinateToArray(coordinate)
+        return this._board[convertedCoordinate[0]][convertedCoordinate[1]].hitStatus;
+    }
+
     placeShip(ship, startCoordinate, endCoordinate){
         const size = ship.shipSize;
 
         //Convert coordinates if needed
-        let startCoordinateConverted
-        let endCoordinateConverted
-        if (typeof(startCoordinate) === 'string' && typeof(endCoordinate) === 'string') {
-            startCoordinateConverted = stringToArray(startCoordinate);
-            endCoordinateConverted = stringToArray(endCoordinate);
-        } else if (Array.isArray(startCoordinate) && Array.isArray(endCoordinate)) {
-            startCoordinateConverted = startCoordinate;
-            endCoordinateConverted = endCoordinate;
-        } else {
-            throw new Error('Invalid coordinate format. Coordinates must be either strings or arrays.');
-        }
+        const startCoordinateConverted = forceCoordinateToArray(startCoordinate);
+        const endCoordinateConverted = forceCoordinateToArray(endCoordinate)
 
         //populate board in correct direction until ship length size
         //if X axis changes, ship is horizontal
@@ -117,18 +97,9 @@ export default class Gameboard{
     }
 
     getShipAt(coordinate){
-        let convertedCoordinate;
-        if (typeof coordinate === 'string') {
-            convertedCoordinate = stringToArray(coordinate);
-        } else if (Array.isArray(coordinate)) {
-            convertedCoordinate = coordinate;
-        } else {
-            throw new Error('Invalid coordinate format. Coordinate must be either a string or an array.');
-        }
-
+        const convertedCoordinate = forceCoordinateToArray(coordinate)
         return this._board[convertedCoordinate[0]][convertedCoordinate[1]].ship
     }
-
 } 
 
 

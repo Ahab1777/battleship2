@@ -1,5 +1,5 @@
 import Ship from "./ship";
-import { arrayToString, isArrayOutOfBounds, isStringOutOfBounds, stringToArray } from "./utils";
+import { arrayToString, isArrayOutOfBounds, isStringOutOfBounds, stringToArray, isCoordinateOutOfBounds } from "./utils";
 
 describe('Testing utility functions', () => {
     const outOfBoundsArrayX = [10, 8];
@@ -30,6 +30,15 @@ describe('Testing utility functions', () => {
         expect(isStringOutOfBounds(outOfBoundsStringX)).toBe(true)
         expect(isStringOutOfBounds(outOfBoundsStringY)).toBe(true)
         expect(isStringOutOfBounds(withinBoundsString)).toBe(false)
+    })
+
+    test('Is string or array out of bounds?', () => {
+        expect(isCoordinateOutOfBounds(outOfBoundsArrayX)).toBe(true)
+        expect(isCoordinateOutOfBounds(outOfBoundsArrayY)).toBe(true)
+        expect(isCoordinateOutOfBounds(withinBoundsArray)).toBe(false)
+        expect(isCoordinateOutOfBounds(outOfBoundsStringX)).toBe(true)
+        expect(isCoordinateOutOfBounds(outOfBoundsStringY)).toBe(true)
+        expect(isCoordinateOutOfBounds(withinBoundsString)).toBe(false)
     })
 
 })

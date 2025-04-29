@@ -14,6 +14,22 @@ export function arrayToString(array){
     return rowString + columnString;
 }
 
+export function isCoordinateOutOfBounds(coordinate){
+    const targetCoordinate = forceCoordinateToArray(coordinate);
+    if (
+        targetCoordinate[0] < 0 ||
+        targetCoordinate[0] > 9 ||
+        targetCoordinate[1] < 0 ||
+        targetCoordinate[1] > 9
+    ) {
+        return true
+    } 
+    else {
+        return false
+    }
+
+}
+
 export function isStringOutOfBounds(coordinate) {
     if (typeof coordinate !== 'string') {
         throw new Error(`Coordinate (${coordinate}) is not a string`);
@@ -47,4 +63,16 @@ export function isArrayOutOfBounds(coordinate) {
     else {
         return false
     }
+}
+
+export function forceCoordinateToArray(coordinate){
+    let convertedCoordinate;
+    if (typeof coordinate === 'string') {
+        convertedCoordinate = stringToArray(coordinate);
+    } else if (Array.isArray(coordinate)) {
+        convertedCoordinate = coordinate;
+    } else {
+        throw new Error('Invalid coordinate format. Coordinate must be either a string or an array.');
+    }
+    return convertedCoordinate;
 }
