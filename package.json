@@ -1,0 +1,19 @@
+{
+  "name": "battleship2",
+  "version": "1.0.0",
+  "description": "Battleship game for The Odin Project",
+  "main": "babel.config.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ahab1777/battleship2.git"
+  },
+  "author": "Leonardo de Pinho",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ahab1777/battleship2/issues"
+  },
+  "homepage": "https://github.com/Ahab1777/battleship2#readme"
+}
