@@ -176,6 +176,7 @@ export function dragOver(e, getShipAtFunction) {
         default:
             throw new Error('No valid valid direction provided')
     }
+
     //Check if any target square already have a ship within it
     for (let i = 0; i < shipSize; i++) {
         let currentTargetSquare

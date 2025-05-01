@@ -13,24 +13,22 @@ export function render(match){
     //1.1 - Set fleet container direction and ships direction
     const fleetDirection = fleet.dataset.direction //directions are reversed so that ship remain within the boundaries of the fleet container
     if (fleetDirection === 'vertical') {
-        fleet.classList.remove('horizontal')
-        fleet.classList.add('vertical')
-    }
-    else if (fleetDirection === 'horizontal') {
         fleet.classList.remove('vertical')
         fleet.classList.add('horizontal')
     }
+    else if (fleetDirection === 'horizontal') {
+        fleet.classList.remove('horizontal')
+        fleet.classList.add('vertical')
+    }
 
+
+    //TODO - simplify logic
     const dockedShipsNode = document.querySelectorAll('.docked-ship');//Select ships and remove/add direction class based on docked-ship direction dataset
     dockedShipsNode.forEach(ship => {
-        const shipDirection = ship.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
-        console.log("🚀 ~ render ~ shipDirection:", shipDirection)
-        const previousShipDirection = ship.dataset.direction === 'vertical' ? 'vertical' : 'horizontal';
-        console.log("🚀 ~ render ~ previousShipDirection:", previousShipDirection)
-        ship.classList.remove(`${previousShipDirection}`);
-        ship.classList.add(`${shipDirection}`);
-        console.log("🚀 ~ render ~ ship.classList:", ship.classList)
-        
+            const currentDirectionClass = ship.dataset.direction;
+            const pastDirectionClass = currentDirectionClass === 'horizontal' ? 'vertical' : 'horizontal';
+            ship.classList.remove(pastDirectionClass);
+            ship.classList.add(currentDirectionClass)
     })
 
     //1.2 - Create node of ship elements
