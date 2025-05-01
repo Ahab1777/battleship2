@@ -90,12 +90,13 @@ export function dragStart(e){
     //Ass class to ship to target it later
     ship.classList.add('dragging-ship')
 
+    //TODO - review if docked dataset is necessary
     //Change docked status to false, since ship left dock
     ship.dataset.docked = false
 
     //Center dragging object on mouse
-    const direction = e.target.dataset.direction
-    const dragImage = e.currentTarget.cloneNode(true);
+    const direction = ship.dataset.direction;
+    const dragImage = ship.cloneNode(true);
     dragImage.style.opacity = '0.5';
     const dragImageId = 'drag-image'//Add id to target it later
     ship.dataset.dragImageId = dragImageId;
@@ -125,10 +126,8 @@ export function dragStart(e){
         id: id
     }))
 
-    //Set effectAllowed to control operation and original parent to return to it
-    e.dataTransfer.effectAllowed = 'move';
-    e.target.dataset.originalParent = e.target.parentNode.id;
-
+    //Store the parent id to target it later
+    ship.dataset.originalParent = ship.parentNode.id;
 
     //Delay hide class to be added for dragging animation
     setTimeout(() => {
@@ -155,7 +154,9 @@ export function dragEnd(e){
     if (dragImage) {
         dragImage.remove();
     }
-  
+    
+    // Ensure the ship that got re-docked(returned to fleet container) is visible if drop fails
+    ship.classList.remove('hide', 'dragging-ship');
 
 }
 
@@ -294,7 +295,12 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
 
     //2.3 If drop invalid, return ship to dock(fleet container)
     if (!isValidDrop) {
-        return
+        const shipElement = document.getElementById(shipInfo.id);
+        const originalParentId = shipElement.dataset.originalParent;
+        const originalParent = document.getElementById(originalParentId);
+        originalParent.appendChild(shipElement);
+        shipElement.classList.remove('hide');
+        return;
     }
 
     // if (!isValidDrop) {
