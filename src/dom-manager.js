@@ -45,6 +45,8 @@ export function render(match){
         const shipAtCoordinate = board.getShipAt(coordinate);
         //1 - Intact ship
         if (shipAtCoordinate && !shipAtCoordinate.isSunk) {
+            console.log("🚀 ~ render ~ shipAtCoordinate:", shipAtCoordinate)
+            
             square.classList.add('ship');
         }
         //2 - is hit - missed
@@ -132,6 +134,15 @@ export function resetDOM(match){
     //3 - Clear game status display
     const display = document.querySelector('.game-status');
     display.textContent = '';
+
+    //Reset buttons event handlers
+    const flipShipBtn = document.querySelector('.flip-btn')
+    const newFlipBtn = flipShipBtn.cloneNode(true);
+    flipShipBtn.parentNode.replaceChild(newFlipBtn, flipShipBtn)
+
+    const testRenderBtn = document.querySelector('#render')
+    const newRender = testRenderBtn.cloneNode(true)
+    testRenderBtn.parentNode.replaceChild(newRender, testRenderBtn)
 
 
 }
