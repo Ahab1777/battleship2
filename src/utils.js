@@ -304,3 +304,15 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
     placeShipFunction(newShip, startCoordinate, endCoordinate)
 
 }
+
+export function flipShips(){
+    //Create node of all docked ships and toggle direction
+    const dockedShips = document.querySelectorAll('.docked-ship')
+    dockedShips.forEach(ship => {
+        ship.dataset.direction = ship.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
+    })
+
+    //Target fleet container and toggle direction
+    const fleet = document.querySelector('.fleet');
+    fleet.dataset.direction = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
+}

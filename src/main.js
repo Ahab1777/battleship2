@@ -2,7 +2,7 @@ import Game from "./game.js";
 import Player from "./player.js";
 import Gameboard from "./gameboard.js";
 import { render, resetDOM } from "./dom-manager.js";
-import { dragOver, dragEnter, dragLeave, drop } from "./utils.js";
+import { dragOver, dragEnter, dragLeave, drop, flipShips } from "./utils.js";
 
 
 
@@ -19,6 +19,13 @@ newGameBtn.addEventListener('click', () => {
     resetDOM(match)
     match.positionShips()
     render(match)
+
+    //Add flip ships button
+    const flipShipBtn = document.querySelector('.flip-btn')
+    flipShipBtn.addEventListener('click', () => {
+        flipShips();
+        render(match)
+    })
 
     //Make player's board a drop-zone
     const playerSquareNodeList = document.querySelectorAll(`.player-container .square`)
@@ -39,6 +46,8 @@ newGameBtn.addEventListener('click', () => {
             drop(e, placeShipFunction, getShipAtFunction);
             render(match)
         });
+
+        
     })
 
 })
