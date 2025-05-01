@@ -185,7 +185,6 @@ export function dragOver(e, getShipAtFunction) {
             currentTargetSquare = [coordX, (coordY + i)];
         }
         
-        console.log("🚀 ~ dragOver ~ currentTargetSquare:", currentTargetSquare)
         if (getShipAtFunction(currentTargetSquare)) { //check ship presence
             outOfBounds = true;
         }

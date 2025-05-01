@@ -1,5 +1,5 @@
 import Ship from "./ship.js";
-import { isArrayOutOfBounds, isStringOutOfBounds, stringToArray, arrayToString, forceCoordinateToArray } from "./utils.js";
+import { isArrayOutOfBounds, isStringOutOfBounds, stringToArray, arrayToString, forceCoordinateToArray, isCoordinateOutOfBounds } from "./utils.js";
 
 export default class Gameboard{
     constructor(){
@@ -102,7 +102,10 @@ export default class Gameboard{
     }
 
     getShipAt(coordinate){
-        const convertedCoordinate = forceCoordinateToArray(coordinate)
+        const convertedCoordinate = forceCoordinateToArray(coordinate);
+        if (isCoordinateOutOfBounds(convertedCoordinate)) {
+            return null
+        }
         return this._board[convertedCoordinate[0]][convertedCoordinate[1]].ship
     }
 } 
