@@ -87,13 +87,19 @@ export function dragStart(e){
         square.classList.add('dragging')
     })
 
-    //Ass class to ship ta target it later
+    //Ass class to ship to target it later
     ship.classList.add('dragging-ship')
+
+    //Change docked status to false, since ship left dock
+    ship.dataset.docked = false
 
     //Center dragging object on mouse
     const direction = e.target.dataset.direction
     const dragImage = e.currentTarget.cloneNode(true);
     dragImage.style.opacity = '0.5';
+    const dragImageId = 'drag-image'//Add id to target it later
+    ship.dataset.dragImageId = dragImageId;
+    dragImage.id = dragImageId
     document.body.appendChild(dragImage);
     const rect = e.target.getBoundingClientRect();
     let offsetX;
@@ -108,7 +114,9 @@ export function dragStart(e){
     }
     e.dataTransfer.setDragImage(dragImage, offsetX, offsetY)
 
-    //Feed ship info into dataTransfer ofr drag and drop
+
+
+    //Feed ship info into dataTransfer for drag and drop
     const id = e.target.id;
     const shipSize = e.target.dataset.size;
     e.dataTransfer.setData('text/plain', JSON.stringify({
@@ -117,6 +125,11 @@ export function dragStart(e){
         id: id
     }))
 
+    //Set effectAllowed to control operation and original parent to return to it
+    e.dataTransfer.effectAllowed = 'move';
+    e.target.dataset.originalParent = e.target.parentNode.id;
+
+
     //Delay hide class to be added for dragging animation
     setTimeout(() => {
         ship.classList.add('hide');
@@ -124,6 +137,7 @@ export function dragStart(e){
 }
 
 export function dragEnd(e){
+    e.preventDefault()
     //Grab squares within the target ship
     const ship = e.currentTarget;
     const squaresWithin = Array.from(ship.children);
@@ -135,6 +149,14 @@ export function dragEnd(e){
 
     //Remove dragging class from boat 
     ship.classList.remove('dragging-ship')
+
+    //remove drag image (ghost ships) from DOM
+    const dragImage = document.getElementById('drag-image');
+    if (dragImage) {
+        dragImage.remove();
+    }
+  
+
 }
 
 export function dragEnter(e) {
@@ -144,6 +166,9 @@ export function dragEnter(e) {
 
 export function dragOver(e, getShipAtFunction) {
     e.preventDefault();
+
+    //Add dropEffect
+    e.dataTransfer.dropEffect = 'move';
 
     //Select ship being dragged
     const shipBeingDragged = document.querySelector('.dragging-ship')
@@ -244,30 +269,51 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
     let startCoordinate = forceCoordinateToArray(e.target.dataset.pos)
 
     //2.1 - Use ship size to identify endCoordinate
-    let targetCoordinate;
-    if (direction === 'horizontal') {
-        targetCoordinate = [(startCoordinate[0] + shipSize) - 1, startCoordinate[1]];
-    } else if (direction === 'vertical') {
-        targetCoordinate = [startCoordinate[0], (startCoordinate[1] + shipSize) - 1];
-    }
+    const targetCoordinate = direction === 'horizontal'
+    ? [startCoordinate[0] + shipSize - 1, startCoordinate[1]]
+    : [startCoordinate[0], startCoordinate[1] + shipSize - 1];
     
-    //2.2 - Check if last square is within bounds, if not, cancel drop
+    //2.2 - Check if last square is within bounds for a valid drop
+    let isValidDrop = true;
     switch (direction) {
         case 'horizontal':
             const coordX = (startCoordinate[0] + shipSize) - 1
             if (coordX < 0 || coordX > 9) {
-                return
+                isValidDrop = false
             }
             break;
         case 'vertical':
             const coordY = (startCoordinate[1] + shipSize) - 1
             if (coordY < 0 || coordY > 9) {
-                return
+                isValidDrop = false
             }
             break;
         default:
             throw new Error('No valid valid direction provided')
     }
+
+    //2.3 If drop invalid, return ship to dock(fleet container)
+    if (!isValidDrop) {
+        return
+    }
+
+    // if (!isValidDrop) {
+    //     console.log("🚀 ~ drop ~ isValidDrop is false")
+    //     const fleet = document.querySelector('.fleet');
+    //     console.log("🚀 ~ drop ~ fleet:", fleet)
+    //     const shipElement = document.querySelector(`#${shipInfo.id}`);
+    //     fleet.appendChild(shipElement);
+    //     console.log("🚀 ~ drop ~ fleet post append:", fleet)
+    //     shipElement.classList.remove('hide');
+    //     Remove dragging copy(ghost ship)
+    //     const ghostShip = document.querySelector(`#${shipInfo.id}.dragging-ship`);
+        
+    //     console.log("🚀 ~ drop ~ ghostShip:", ghostShip)
+    //     if (ghostShip) {
+    //         ghostShip.remove();
+    //     }
+    //     return;
+    // }
 
     //Cancel drop if over another ship by applying getSquareShip on each square
     for (let i = 0; i < shipSize; i++) {
@@ -303,6 +349,11 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
     const newShip = new Ship(shipSize)
     //Feed placeShip function
     placeShipFunction(newShip, startCoordinate, endCoordinate)
+
+    //Remove ghost ship
+    // const ghostShip = document.querySelector(`#${shipInfo.id}`);
+    // console.log("🚀 ~ drop ~ ghostShip:", ghostShip)
+    // ghostShip.remove()
 
 }
 
