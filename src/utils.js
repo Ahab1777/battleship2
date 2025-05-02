@@ -364,13 +364,26 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
 }
 
 export function flipShips(){
-    //Create node of all docked ships and toggle direction
+    //REDO
+    //Identify current position by fleet container direction dataset info
+    const fleet = document.querySelector('.fleet')
+    const targetDirection = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
+    const previousDirection = targetDirection === 'vertical' ? 'horizontal' : 'vertical';
+
+    //Apply targetDirection to container and previousdirection to ships
     const dockedShips = document.querySelectorAll('.docked-ship')
     dockedShips.forEach(ship => {
-        ship.dataset.direction = ship.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
+        ship.dataset.direction = previousDirection;
     })
 
-    //Target fleet container and toggle direction
-    const fleet = document.querySelector('.fleet');
-    fleet.dataset.direction = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
+    fleet.dataset.direction = targetDirection
+
+    // //Create node of all docked ships and toggle direction
+    // const dockedShips = document.querySelectorAll('.docked-ship')
+    // dockedShips.forEach(ship => {
+    //     ship.dataset.direction = ship.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
+    // })
+
+    // //Target fleet container and toggle direction
+    // fleet.dataset.direction = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
 }

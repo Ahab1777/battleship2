@@ -11,14 +11,15 @@ export function render(match){
     const fleet = document.querySelector('.fleet');
 
     //1.1 - Set fleet container direction and ships direction
-    const fleetDirection = fleet.dataset.direction //directions are reversed so that ship remain within the boundaries of the fleet container
+    console.log('render set the class by reading dataset')
+    const fleetDirection = fleet.dataset.direction 
     if (fleetDirection === 'vertical') {
-        fleet.classList.remove('vertical')
-        fleet.classList.add('horizontal')
-    }
-    else if (fleetDirection === 'horizontal') {
         fleet.classList.remove('horizontal')
         fleet.classList.add('vertical')
+    }
+    else if (fleetDirection === 'horizontal') {
+        fleet.classList.remove('vertical')
+        fleet.classList.add('horizontal')
     }
 
 
@@ -107,6 +108,10 @@ export function resetDOM(match){
 
     //2 - Empty docked ships fleet-container and refill it with standardFleet
     const fleet = document.querySelector('.fleet');
+    fleet.dataset.direction = 'horizontal';
+    console.log('resetDOM set the class by reading dataset')
+    
+    //2.2 - fill docks with ships
     fleet.innerHTML = '';
     match.standardFleet.forEach((ship) => {
         const newShipElement = document.createElement('div');
