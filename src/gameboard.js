@@ -64,6 +64,7 @@ export default class Gameboard{
                 this._board[xAxis + x][yAxis].ship = ship//place ship along its direction on board
             }
             this._fleet.push(ship)
+
         }
         else if (startCoordinateConverted[0] > endCoordinateConverted[0]){
             const xAxis = startCoordinateConverted[0]
@@ -83,6 +84,7 @@ export default class Gameboard{
                 this._board[xAxis][yAxis + y].ship = ship//place ship along its direction on board
             }
             this._fleet.push(ship)
+
         }
         else if (startCoordinateConverted[1] > endCoordinateConverted[1]) {
             const xAxis = startCoordinateConverted[0]
@@ -91,6 +93,7 @@ export default class Gameboard{
                 this._board[xAxis][yAxis - y].ship = ship//place ship along its direction on board
             }
             this._fleet.push(ship)
+
         }
         else if (startCoordinateConverted === endCoordinateConverted){
             throw new Error('Start and end coordinates cannot be the same');

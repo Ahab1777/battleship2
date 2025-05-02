@@ -303,24 +303,6 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
         return;
     }
 
-    // if (!isValidDrop) {
-    //     console.log("🚀 ~ drop ~ isValidDrop is false")
-    //     const fleet = document.querySelector('.fleet');
-    //     console.log("🚀 ~ drop ~ fleet:", fleet)
-    //     const shipElement = document.querySelector(`#${shipInfo.id}`);
-    //     fleet.appendChild(shipElement);
-    //     console.log("🚀 ~ drop ~ fleet post append:", fleet)
-    //     shipElement.classList.remove('hide');
-    //     Remove dragging copy(ghost ship)
-    //     const ghostShip = document.querySelector(`#${shipInfo.id}.dragging-ship`);
-        
-    //     console.log("🚀 ~ drop ~ ghostShip:", ghostShip)
-    //     if (ghostShip) {
-    //         ghostShip.remove();
-    //     }
-    //     return;
-    // }
-
     //Cancel drop if over another ship by applying getSquareShip on each square
     for (let i = 0; i < shipSize; i++) {
         
@@ -339,7 +321,6 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
         
     }
 
-    //?????????????
     //Remove current ship by removing the ghost ship (dragging-ship) matching id 
     const dockedShipsNode = document.querySelectorAll('.docked-ship')
     dockedShipsNode.forEach(ship => {
@@ -356,15 +337,9 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
     //Feed placeShip function
     placeShipFunction(newShip, startCoordinate, endCoordinate)
 
-    //Remove ghost ship
-    // const ghostShip = document.querySelector(`#${shipInfo.id}`);
-    // console.log("🚀 ~ drop ~ ghostShip:", ghostShip)
-    // ghostShip.remove()
-
 }
 
 export function flipShips(){
-    //REDO
     //Identify current position by fleet container direction dataset info
     const fleet = document.querySelector('.fleet')
     const targetDirection = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
@@ -377,13 +352,4 @@ export function flipShips(){
     })
 
     fleet.dataset.direction = targetDirection
-
-    // //Create node of all docked ships and toggle direction
-    // const dockedShips = document.querySelectorAll('.docked-ship')
-    // dockedShips.forEach(ship => {
-    //     ship.dataset.direction = ship.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
-    // })
-
-    // //Target fleet container and toggle direction
-    // fleet.dataset.direction = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
 }

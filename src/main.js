@@ -14,6 +14,9 @@ newGameBtn.addEventListener('click', () => {
     let player = new Player('player', playerGameboard);
     let computer = new Player('computer', computerGameboard);''
     let match = new Game(player, computer);
+
+    //identify number of ships to check if game can be started
+    const totalShips = match.standardFleet.length;
     
     //Place computer ships
     resetDOM(match)
@@ -28,40 +31,119 @@ newGameBtn.addEventListener('click', () => {
         render(match)
     })
 
-    //TEST
-    const testBtn = document.querySelector('#render')
-    testBtn.addEventListener('click', (e) => {
-        console.log("🚀 ~ newGameBtn.addEventListener ~ playerGameboard:", playerGameboard)
-        render(match)
-    })
 
-    //Remove old eventListeners
+
+
+    // //Add attack handler to enemy grid
+    // const computerSquareNodeList = document.querySelectorAll(
+    // `.computer-container .square`)
+    // console.log("🚀 ~ newGameBtn.addEventListener ~ computerSquareNodeList:", computerSquareNodeList)
+
+    // computerSquareNodeList.forEach(square => {
+    //     square.addEventListener('click', () => {
+    //         //Add attack function
+    //         const coordinate = square.getAttribute('data-pos');
+    
+    //         match.makeAttack(coordinate);
+    //         render(match);
+    //         match.checkWinCon();
+    //         if (match.gameHasEnded) return; // Stop if the game has ended
+    //         match.togglePlayers();
+    
+    //         // Make the board unclickable
+    //         computerSquareNodeList.forEach((square) => {
+    //             square.style.pointerEvents = "none";
+    //         });
+    
+    //         // Re-enable the board after the computer's turn
+    //         setTimeout(() => {
+    //             computerSquareNodeList.forEach((square) => {
+    //             square.style.pointerEvents = "auto";
+    //             });
+    //         }, 500); // Match the delay of the computer's attack
+    
+    //         // Disable the clicked square
+    //         square.style.pointerEvents = "none";
+    //         // Computer's attack
+    //         setTimeout(() => {
+    //             // Add a delay to simulate the computer "thinking"
+    //             match.makeAttack();
+    //             render(match);
+    //             match.checkWinCon();
+    //             if (match.gameHasEnded) return; // Stop if the game has ended
+    //             match.togglePlayers();
+    //             render(match);
+    //         }, 500); // 500ms delay
+    //     })
+    // })
+
+
+
+    
+    //Add handlers to make grid a drop zone
     const playerSquareNodeList = document.querySelectorAll(`.player-container .square`)
-
-
-
-
-    //Remove previous event listeners and add again handler to make grid a drop zone
     playerSquareNodeList.forEach(square => {
-        //Out with the old...
-        const newSquare = square.cloneNode(true);
-        square.parentNode.replaceChild(newSquare, square);
-
         //...In with the new.
         const getShipAtFunction = player.gameboard.getShipAt.bind(player.gameboard);
         const placeShipFunction = player.gameboard.placeShip.bind(player.gameboard)
 
 
-        newSquare.addEventListener('dragenter', dragEnter)
-        newSquare.addEventListener('dragover', (e) => {
+        square.addEventListener('dragenter', dragEnter)
+        square.addEventListener('dragover', (e) => {
             dragOver(e, getShipAtFunction)
         });
-        newSquare.addEventListener('dragleave', (e) => {
+        square.addEventListener('dragleave', (e) => {
             dragLeave(e)
             render(match)
         });
-        newSquare.addEventListener('drop', (e) => {
+        square.addEventListener('drop', (e) => {
             drop(e, placeShipFunction, getShipAtFunction);
+
+            //Check if all ships are positioned to start the game
+            if (totalShips === playerGameboard._fleet.length) {
+                
+                //Add attack handler to enemy grid
+                const computerSquareNodeList = document.querySelectorAll(`.computer-container .square`)
+                computerSquareNodeList.forEach(square => {
+                    square.addEventListener('click', () => {
+                        //Add attack function
+                        const coordinate = square.getAttribute('data-pos');
+                
+                        match.makeAttack(coordinate);
+                        render(match);
+                        match.checkWinCon();
+                        if (match.gameHasEnded) return; // Stop if the game has ended
+                        match.togglePlayers();
+                
+                        // Make the board unclickable
+                        computerSquareNodeList.forEach((square) => {
+                            square.style.pointerEvents = "none";
+                        });
+                
+                        // Re-enable the board after the computer's turn
+                        setTimeout(() => {
+                            computerSquareNodeList.forEach((square) => {
+                            square.style.pointerEvents = "auto";
+                            });
+                        }, 500); // Match the delay of the computer's attack
+                
+                        // Disable the clicked square
+                        square.style.pointerEvents = "none";
+                        // Computer's attack
+                        setTimeout(() => {
+                            // Add a delay to simulate the computer "thinking"
+                            match.makeAttack();
+                            render(match);
+                            match.checkWinCon();
+                            if (match.gameHasEnded) return; // Stop if the game has ended
+                            match.togglePlayers();
+                            render(match);
+                        }, 500); // 500ms delay
+                    })
+                })                
+                render(match)
+                return
+            }
             render(match)
         });
 

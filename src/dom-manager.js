@@ -11,7 +11,6 @@ export function render(match){
     const fleet = document.querySelector('.fleet');
 
     //1.1 - Set fleet container direction and ships direction
-    console.log('render set the class by reading dataset')
     const fleetDirection = fleet.dataset.direction 
     if (fleetDirection === 'vertical') {
         fleet.classList.remove('horizontal')
@@ -23,18 +22,12 @@ export function render(match){
     }
 
 
-    //TODO - simplify logic
     const dockedShipsNode = document.querySelectorAll('.docked-ship');//Select ships and remove/add direction class based on docked-ship direction dataset
     dockedShipsNode.forEach(ship => {
             const currentDirectionClass = ship.dataset.direction;
             const pastDirectionClass = currentDirectionClass === 'horizontal' ? 'vertical' : 'horizontal';
             ship.classList.remove(pastDirectionClass);
             ship.classList.add(currentDirectionClass)
-    })
-
-    //1.2 - Create node of ship elements
-    match.standardFleet.forEach(ship => {
-
     })
 
 
@@ -46,8 +39,6 @@ export function render(match){
         const shipAtCoordinate = board.getShipAt(coordinate);
         //1 - Intact ship
         if (shipAtCoordinate && !shipAtCoordinate.isSunk) {
-            console.log("🚀 ~ render ~ shipAtCoordinate:", shipAtCoordinate)
-            
             square.classList.add('ship');
         }
         //2 - is hit - missed
@@ -62,6 +53,7 @@ export function render(match){
         //4 - is hit - sunk
         if (shipAtCoordinate && shipAtCoordinate.isSunk) {
             square.classList.add('sunk');
+            square.classList.remove('hit')
             square.classList.remove('ship');
             
         }
@@ -84,7 +76,8 @@ export function render(match){
             square.classList.add('hit')
         }
         //3 - is hit - sunk
-        if (board.getShipAt(coordinate)?.sunkStatus) {
+        if (board.getShipAt(coordinate)?.isSunk) {
+            square.classList.remove('hit')
             square.classList.add('sunk');
         }
         
@@ -144,10 +137,4 @@ export function resetDOM(match){
     const flipShipBtn = document.querySelector('.flip-btn')
     const newFlipBtn = flipShipBtn.cloneNode(true);
     flipShipBtn.parentNode.replaceChild(newFlipBtn, flipShipBtn)
-
-    const testRenderBtn = document.querySelector('#render')
-    const newRender = testRenderBtn.cloneNode(true)
-    testRenderBtn.parentNode.replaceChild(newRender, testRenderBtn)
-
-
 }
