@@ -17,17 +17,54 @@
 .game-display {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 1fr, 1fr;
+    grid-template-rows: repeat(2, calc(2 * var(--square-side))) 1fr;
 }
 
 .game-status {
-    grid-area: 1 / 1 / 2 / 4;
+    grid-area: 2 / 1 / 3 / 4;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
     color: white;
 }
+
+
+/* Display - Score */
+.score{
+    grid-area: 2 / 1 / 4 / 3;
+    margin-left: 50px;
+}
+
+.score > h3{
+    font-size: 2rem;
+    margin: 20px;
+}
+
+.score > div{
+    font-size: 1.5rem;
+    margin: 5px;
+    font-weight: bold;
+}
+
+
+.fleet-container{
+    margin: 10px;
+}
+
+.new-game-btn-container{
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.flip-btn-container{
+    grid-area: 2 / 3 / 3 / 4;
+}
+
+.fleet-container{
+    grid-area: 3 / 3 / 4 / 4;
+
+}
+
 
 .new-game-btn-container, .random-positions-btn-container, .flip-btn-container {
     grid-template-columns:auto;

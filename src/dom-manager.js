@@ -83,6 +83,11 @@ export function render(match){
         
 
     })
+
+    //Render enemy fleet status
+    const fleetStatusNode = document.querySelectorAll('.classShip');
+    
+
 }
 
 export function resetDOM(match){

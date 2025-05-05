@@ -16,12 +16,21 @@
         <div class="new-game-btn-container">
             <button class="new-game">New Game</button>
         </div>
-        
         <div class="flip-btn-container">
             <button class="flip-btn">Flip Ships</button>
         </div>
-    </div>
-    <div class="fleet" id="fleet" data-direction="horizontal">
+        <div class="fleet-container">
+            <div class="fleet" id="fleet" data-direction="horizontal">
+            </div>
+        </div>
+        <div class="score">
+            <h3>Enemy fleet status</h3>
+            <div data-ship="carrier" class="shipStatus">Carrier: <span></span></div>
+            <div data-ship="battleship" class="shipStatus">Battleship: <span></span></div>
+            <div data-ship="cruiser" class="shipStatus">Cruiser: <span></span></div>
+            <div data-ship="submarine" class="shipStatus">Submarine: <span></span></div>
+            <div data-ship="destroyer" class="shipStatus">Destroyer: <span></span></div>
+        </div>
     </div>
     <div class="battle-container">
         <div class="team-container">

@@ -77,45 +77,43 @@ export function forceCoordinateToArray(coordinate){
     return convertedCoordinate;
 }
 
-export function dragStart(e){
+export function dragStart(e) {
     //Grab squares within the target ship
     const ship = e.currentTarget;
+    console.log(`[${new Date().toISOString()}] 🚀 ~ dragStart ~ ship:`, ship);
     const squaresWithin = Array.from(ship.children);
 
     //Style squares
     squaresWithin.forEach(square => {
-        square.classList.add('dragging')
-    })
+        square.classList.add('dragging');
+    });
 
     //Ass class to ship to target it later
-    ship.classList.add('dragging-ship')
+    ship.classList.add('dragging-ship');
 
     //TODO - review if docked dataset is necessary
     //Change docked status to false, since ship left dock
-    ship.dataset.docked = false
+    ship.dataset.docked = false;
 
     //Center dragging object on mouse
     const direction = ship.dataset.direction;
     const dragImage = ship.cloneNode(true);
     dragImage.style.opacity = '0.5';
-    const dragImageId = 'drag-image'//Add id to target it later
+    const dragImageId = 'drag-image'; //Add id to target it later
     ship.dataset.dragImageId = dragImageId;
-    dragImage.id = dragImageId
+    dragImage.id = dragImageId;
     document.body.appendChild(dragImage);
     const rect = e.target.getBoundingClientRect();
     let offsetX;
-    let offsetY
+    let offsetY;
     if (direction === 'vertical') {
-        offsetX = rect.width / 2;  // Center horizontally
+        offsetX = rect.width / 2; // Center horizontally
         offsetY = 20; // Center vertically (20px is half of each square)
-    }
-    else if (direction === 'horizontal'){
+    } else if (direction === 'horizontal') {
         offsetX = 20; // Center vertically (20px is half of each square)
-        offsetY = rect.height / 2;  // Center horizontally
+        offsetY = rect.height / 2; // Center horizontally
     }
-    e.dataTransfer.setDragImage(dragImage, offsetX, offsetY)
-
-
+    e.dataTransfer.setDragImage(dragImage, offsetX, offsetY);
 
     //Feed ship info into dataTransfer for drag and drop
     const id = e.target.id;
@@ -124,7 +122,7 @@ export function dragStart(e){
         direction: direction,
         shipSize: shipSize,
         id: id
-    }))
+    }));
 
     //Store the parent id to target it later
     ship.dataset.originalParent = ship.parentNode.id;
@@ -132,52 +130,64 @@ export function dragStart(e){
     //Delay hide class to be added for dragging animation
     setTimeout(() => {
         ship.classList.add('hide');
+        console.log(`[${new Date().toISOString()}] 🚀 ~ setTimeout ~ dragStart added 'hide'`);
+        console.log(`[${new Date().toISOString()}] 🚀 setTimeout ~ dragStart ~ ship:`, ship);
     }, 0);
 }
 
-export function dragEnd(e){
-    e.preventDefault()
+export function dragEnd(e) {
+    e.preventDefault();
     //Grab squares within the target ship
     const ship = e.currentTarget;
+    console.log(`[${new Date().toISOString()}] 🚀 ~ dragEnd ~ ship:`, ship);
     const squaresWithin = Array.from(ship.children);
 
     //Style squares within ship
     squaresWithin.forEach(square => {
-        square.classList.remove('dragging')
-    })
+        square.classList.remove('dragging');
+    });
 
     //Remove dragging class from boat 
-    ship.classList.remove('dragging-ship')
+    ship.classList.remove('dragging-ship');
+
+    // Ensure the ship that got re-docked(returned to fleet container) is visible if drop fails
+    ship.classList.remove('hide');
 
     //remove drag image (ghost ships) from DOM
     const dragImage = document.getElementById('drag-image');
     if (dragImage) {
         dragImage.remove();
     }
-    
-    // Ensure the ship that got re-docked(returned to fleet container) is visible if drop fails
-    ship.classList.remove('hide', 'dragging-ship');
 
+    // Ensure the ship that got re-docked(returned to fleet container) is visible if drop fails
+    setTimeout(() => {
+        ship.classList.remove('hide');
+        ship.classList.remove('dragging-ship');
+        console.log(`[${new Date().toISOString()}] 🚀 ~ setTimeout ~ dragEnd removed 'hide' and 'dragging-ship'`);
+        console.log(`[${new Date().toISOString()}] 🚀 setTimeout ~ dragEnd ~ ship:`, ship);
+    }, 100);
 }
 
 export function dragEnter(e) {
+    console.log(`[${new Date().toISOString()}] 🚀 ~ dragEnter ~ dragEnter:`);
     e.preventDefault();
     //e.target.classList.add('drag-over');
 }
 
 export function dragOver(e, getShipAtFunction) {
+    console.log(`[${new Date().toISOString()}] 🚀 ~ dragOver ~ dragOver:`);
     e.preventDefault();
 
     //Add dropEffect
     e.dataTransfer.dropEffect = 'move';
 
     //Select ship being dragged
-    const shipBeingDragged = document.querySelector('.dragging-ship')
+    const shipBeingDragged = document.querySelector('.dragging-ship');
 
     //Grab the size and direction of the ship bring dragged
     const shipSize = parseInt(shipBeingDragged.dataset.size, 10); // Converts to a number
     const direction = shipBeingDragged.dataset.direction;
-    
+
     //Add drag-over class to squares that ship is hovering over    
     const [coordX, coordY] = forceCoordinateToArray(e.target.dataset.pos);
     const playerSquareNodeList = document.querySelectorAll('.player-container .square');
@@ -188,30 +198,30 @@ export function dragOver(e, getShipAtFunction) {
     //Check if last square is  out of bounds
     switch (direction) {
         case 'horizontal':
-            newCoord = coordX + shipSize
-            if (newCoord < 0 || newCoord > 10){
-                outOfBounds = true
+            newCoord = coordX + shipSize;
+            if (newCoord < 0 || newCoord > 10) {
+                outOfBounds = true;
             }
             break;
         case 'vertical':
-            newCoord = coordY + shipSize
-            if (newCoord < 0 || newCoord > 10){
-                outOfBounds = true
+            newCoord = coordY + shipSize;
+            if (newCoord < 0 || newCoord > 10) {
+                outOfBounds = true;
             }
             break;
         default:
-            throw new Error('No valid valid direction provided')
+            throw new Error('No valid valid direction provided');
     }
 
     //Check if any target square already have a ship within it
     for (let i = 0; i < shipSize; i++) {
-        let currentTargetSquare
+        let currentTargetSquare;
         if (direction === 'horizontal') { //check direction
             currentTargetSquare = [coordX + i, coordY];
         } else if (direction === 'vertical') {
             currentTargetSquare = [coordX, (coordY + i)];
         }
-        
+
         if (getShipAtFunction(currentTargetSquare)) { //check ship presence
             outOfBounds = true;
         }
@@ -230,67 +240,66 @@ export function dragOver(e, getShipAtFunction) {
             square => square.dataset.pos === targetCoordinateString
         );
 
-        const squareStyle = outOfBounds ? 'invalid-zone' : 'drag-over'
+        const squareStyle = outOfBounds ? 'invalid-zone' : 'drag-over';
 
         if (targetSquare) {
             targetSquare.classList.add(squareStyle);
         }
     }
-
 }
 
 export function dragLeave(e) {
-    console.log('dragleave')
-    const shipBeingDragged = document.querySelector('.dragging-ship')
+    console.log(`[${new Date().toISOString()}] dragleave`);
+    const shipBeingDragged = document.querySelector('.dragging-ship');
 
     const playerSquareNodeList = document.querySelectorAll('.player-container .square');
     playerSquareNodeList.forEach(square => {
-        square.classList.remove('drag-over')
-        square.classList.remove('invalid-zone')
-
-    })
+        square.classList.remove('drag-over');
+        square.classList.remove('invalid-zone');
+    });
 }
 
 export function drop(e, placeShipFunction, getShipAtFunction) {
-    e.preventDefault()
+    console.log(`[${new Date().toISOString()}] 🚀 ~ drop ~ drop:`);
+    e.preventDefault();
 
     //1 - Create node of square from grid
     const playerSquareNodeList = document.querySelectorAll('.player-container .square');
-    
+
     //1.1 - Remove dropzone styling from squares
     playerSquareNodeList.forEach(square => {
-        square.classList.remove('drag-over')
-        square.classList.remove('invalid-zone')
-    })
-    
+        square.classList.remove('drag-over');
+        square.classList.remove('invalid-zone');
+    });
+
     //2 - Grab ship info
     const shipInfo = JSON.parse(e.dataTransfer.getData('text/plain'));
     const shipSize = parseInt(shipInfo.shipSize, 10);
-    const direction = shipInfo.direction
-    let startCoordinate = forceCoordinateToArray(e.target.dataset.pos)
+    const direction = shipInfo.direction;
+    let startCoordinate = forceCoordinateToArray(e.target.dataset.pos);
 
     //2.1 - Use ship size to identify endCoordinate
     const targetCoordinate = direction === 'horizontal'
-    ? [startCoordinate[0] + shipSize - 1, startCoordinate[1]]
-    : [startCoordinate[0], startCoordinate[1] + shipSize - 1];
-    
+        ? [startCoordinate[0] + shipSize - 1, startCoordinate[1]]
+        : [startCoordinate[0], startCoordinate[1] + shipSize - 1];
+
     //2.2 - Check if last square is within bounds for a valid drop
     let isValidDrop = true;
     switch (direction) {
         case 'horizontal':
-            const coordX = (startCoordinate[0] + shipSize) - 1
+            const coordX = (startCoordinate[0] + shipSize) - 1;
             if (coordX < 0 || coordX > 9) {
-                isValidDrop = false
+                isValidDrop = false;
             }
             break;
         case 'vertical':
-            const coordY = (startCoordinate[1] + shipSize) - 1
+            const coordY = (startCoordinate[1] + shipSize) - 1;
             if (coordY < 0 || coordY > 9) {
-                isValidDrop = false
+                isValidDrop = false;
             }
             break;
         default:
-            throw new Error('No valid valid direction provided')
+            throw new Error('No valid valid direction provided');
     }
 
     //2.3 If drop invalid, return ship to dock(fleet container)
@@ -305,51 +314,51 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
 
     //Cancel drop if over another ship by applying getSquareShip on each square
     for (let i = 0; i < shipSize; i++) {
-        
+
         let currentTargetSquare;
         if (direction === 'horizontal') {
             currentTargetSquare = [(startCoordinate[0] + i), startCoordinate[1]];
             if (getShipAtFunction(currentTargetSquare)) {
-                return
+                return;
             }
         } else if (direction === 'vertical') {
             currentTargetSquare = [startCoordinate[0], (startCoordinate[1] + i)];
             if (getShipAtFunction(currentTargetSquare)) {
-                return
-            } 
+                return;
+            }
         }
-        
+
     }
 
     //Remove current ship by removing the ghost ship (dragging-ship) matching id 
-    const dockedShipsNode = document.querySelectorAll('.docked-ship')
+    const dockedShipsNode = document.querySelectorAll('.docked-ship');
     dockedShipsNode.forEach(ship => {
         if (ship.id === shipInfo.id) {
-            ship.remove()
+            ship.remove();
         }
-    })
-   
+    });
+
     //Convert end coordinate to string
     const endCoordinate = arrayToString(targetCoordinate);
 
     //Create new ship and convert startDirection back to string
-    const newShip = new Ship(shipSize)
+    const newShip = new Ship(shipSize);
     //Feed placeShip function
-    placeShipFunction(newShip, startCoordinate, endCoordinate)
-
+    placeShipFunction(newShip, startCoordinate, endCoordinate);
 }
 
-export function flipShips(){
+export function flipShips() {
+    console.log(`[${new Date().toISOString()}] 🚀 ~ flipShips ~ Flipping ships`);
     //Identify current position by fleet container direction dataset info
-    const fleet = document.querySelector('.fleet')
+    const fleet = document.querySelector('.fleet');
     const targetDirection = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';
     const previousDirection = targetDirection === 'vertical' ? 'horizontal' : 'vertical';
 
     //Apply targetDirection to container and previousdirection to ships
-    const dockedShips = document.querySelectorAll('.docked-ship')
+    const dockedShips = document.querySelectorAll('.docked-ship');
     dockedShips.forEach(ship => {
         ship.dataset.direction = previousDirection;
-    })
+    });
 
-    fleet.dataset.direction = targetDirection
+    fleet.dataset.direction = targetDirection;
 }

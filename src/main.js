@@ -30,55 +30,6 @@ newGameBtn.addEventListener('click', () => {
         flipShips();
         render(match)
     })
-
-
-
-
-    // //Add attack handler to enemy grid
-    // const computerSquareNodeList = document.querySelectorAll(
-    // `.computer-container .square`)
-    // console.log("🚀 ~ newGameBtn.addEventListener ~ computerSquareNodeList:", computerSquareNodeList)
-
-    // computerSquareNodeList.forEach(square => {
-    //     square.addEventListener('click', () => {
-    //         //Add attack function
-    //         const coordinate = square.getAttribute('data-pos');
-    
-    //         match.makeAttack(coordinate);
-    //         render(match);
-    //         match.checkWinCon();
-    //         if (match.gameHasEnded) return; // Stop if the game has ended
-    //         match.togglePlayers();
-    
-    //         // Make the board unclickable
-    //         computerSquareNodeList.forEach((square) => {
-    //             square.style.pointerEvents = "none";
-    //         });
-    
-    //         // Re-enable the board after the computer's turn
-    //         setTimeout(() => {
-    //             computerSquareNodeList.forEach((square) => {
-    //             square.style.pointerEvents = "auto";
-    //             });
-    //         }, 500); // Match the delay of the computer's attack
-    
-    //         // Disable the clicked square
-    //         square.style.pointerEvents = "none";
-    //         // Computer's attack
-    //         setTimeout(() => {
-    //             // Add a delay to simulate the computer "thinking"
-    //             match.makeAttack();
-    //             render(match);
-    //             match.checkWinCon();
-    //             if (match.gameHasEnded) return; // Stop if the game has ended
-    //             match.togglePlayers();
-    //             render(match);
-    //         }, 500); // 500ms delay
-    //     })
-    // })
-
-
-
     
     //Add handlers to make grid a drop zone
     const playerSquareNodeList = document.querySelectorAll(`.player-container .square`)
