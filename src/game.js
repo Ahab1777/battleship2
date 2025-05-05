@@ -177,14 +177,15 @@ export default class Game{
             let attackDone = false;
             let coordinateFound = false;
             const playerSquareNodeList = document.querySelectorAll(`.player-container .square`);
-            const squareMap = new Map();
+            const squareMap = new Map();//Create map of squares to easily find squares by the coordinate(string)
             playerSquareNodeList.forEach(square => {
                 squareMap.set(square.dataset.pos, square);
             });
 
+            //Look for a valid surrounding squares to hit
             for (const square of playerSquareNodeList) {
                 const [coordX, coordY] = forceCoordinateToArray(square.dataset.pos);
-                if (square.classList.contains('hit')) {//Check if current square has been hit
+                if (square.classList.contains('hit') && !square.classList.contains('sunk')) {//Check if current square has been hit
                     const directions = [ // Create array of surrounding coordinates for the current square
                         [coordX - 1, coordY], // Left
                         [coordX + 1, coordY], // Right
@@ -193,13 +194,16 @@ export default class Game{
                     ];
                     //Loop over every adjacent square to check if there is another hit
                     for (let i = 0; i < directions.length; i++) {
-                        if (isCoordinateOutOfBounds(directions[i]) || coordinateFound) {//Skip loop if adjacent square is invalid or coordinate has been found
+                        if (isCoordinateOutOfBounds(directions[i])) {//Skip loop if adjacent square is invalid or coordinate has been found
                             continue 
+                        }
+                        if(coordinateFound){
+                            break
                         }
                         const currentCoordinate = arrayToString(directions[i]);//Needs to be string to use as key for squareMap
                         const currentSquare = squareMap.get(currentCoordinate);
-                        //If square is hit
-                        if (currentSquare.classList.contains('hit') && square.classList.contains('hit')) {
+                        //If square is hit, keep attacking direction until sunk or miss
+                        if (currentSquare.classList.contains('hit')) {
                             //Use opposite side as target
                             let coordinateCandidate;
                             if (i === 0) { //If left also hit, target right
@@ -220,7 +224,8 @@ export default class Game{
                             if (
                                 !isCoordinateOutOfBounds(coordinateCandidate) && 
                                 !getSquareOfCoordinateCandidate.classList.contains('hit') && 
-                                getSquareOfCoordinateCandidate.classList.contains('miss')) 
+                                !getSquareOfCoordinateCandidate.classList.contains('miss') &&
+                                !getSquareOfCoordinateCandidate.classList.contains('sunk')) 
                                 {
                                 coordinate = coordinateCandidate
                                 coordinateFound = true;
@@ -230,6 +235,9 @@ export default class Game{
                     }
                     
                     //loop over every adjacent to check if there is another non-miss/non-hit
+                    if (coordinateFound) {
+                        break;
+                    }
                     for (let i = 0; i < directions.length; i++) {
                         if (isCoordinateOutOfBounds(directions[i]) || coordinateFound) {
                             continue
@@ -237,7 +245,11 @@ export default class Game{
                         const currentCoordinate = arrayToString(directions[i]);//Needs to be string to use as key for squareMap
                         const currentSquare = squareMap.get(currentCoordinate);
                         //If square is not a miss - select it
-                        if(!currentSquare.classList.contains('miss') && !currentSquare.classList.contains('hit')){
+                        if(
+                            !currentSquare.classList.contains('miss') && 
+                            !currentSquare.classList.contains('hit') &&
+                            !currentSquare.classList.contains('sunk')
+                        ){
                             console.log("🚀 ~ Game ~ makeAttack ~ currentSquare.classList: no MISS and not HIT", currentSquare.classList)
                             coordinate = currentCoordinate;
                             coordinateFound = true;
@@ -248,19 +260,19 @@ export default class Game{
 
 
                 }
-                if (!isCoordinateOutOfBounds(coordinate) && coordinateFound) {
-                    
-                    console.log("🚀 ~ Game ~ makeAttack ~ ATTACK DONE:", coordinate)
-                    console.log("🚀 ~ Game ~ makeAttack  ATTACK DONE - String ->!", forceCoordinateToArray(coordinate))
-                    console.log("🚀 ~ Game ~ makeAttack ~ !isCoordinateOutOfBounds(coordinate):", !isCoordinateOutOfBounds(coordinate))
-                    console.log("🚀 ~ Game ~ makeAttack ~ coordinateFound:", coordinateFound)
-                    attackDone = true;
-                    this.defendingPlayer.gameboard.receiveAttack(coordinate);
-                    return; // Exit the function entirely
-                }
+            }
+            if (!isCoordinateOutOfBounds(coordinate) && coordinateFound) {
+                
+                console.log("🚀 ~ Game ~ makeAttack ~ ATTACK DONE:", coordinate)
+                console.log("🚀 ~ Game ~ makeAttack  ATTACK DONE - String ->!", forceCoordinateToArray(coordinate))
+                console.log("🚀 ~ Game ~ makeAttack ~ !isCoordinateOutOfBounds(coordinate):", !isCoordinateOutOfBounds(coordinate))
+                console.log("🚀 ~ Game ~ makeAttack ~ coordinateFound:", coordinateFound)
+                attackDone = true;
+                this.defendingPlayer.gameboard.receiveAttack(coordinate);
+                return; // Exit the function entirely
             }
             //If no other square is hit, make random attack
-            if (!attackDone) {
+            if (!coordinateFound) {
                 console.log("🚀 ~ Game ~ makeAttack ~ Attack was Random:", coordinate)
                 coordinate = this.randomCoordinate()
                 this.defendingPlayer.gameboard.receiveAttack(coordinate)
