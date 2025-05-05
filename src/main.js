@@ -101,4 +101,6 @@ newGameBtn.addEventListener('click', () => {
         
     })
 
+    //Check wincon
+    
 })

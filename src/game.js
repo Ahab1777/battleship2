@@ -194,14 +194,14 @@ export default class Game{
                     ];
                     //Loop over every adjacent square to check if there is another hit
                     for (let i = 0; i < directions.length; i++) {
-                        if (isCoordinateOutOfBounds(directions[i])) {//Skip loop if adjacent square is invalid or coordinate has been found
+                        const currentCoordinate = arrayToString(directions[i]);//Needs to be string to use as key for squareMap
+                        const currentSquare = squareMap.get(currentCoordinate);
+                        if (isCoordinateOutOfBounds(directions[i])){//Skip loop if adjacent square is invalid or coordinate has been found
                             continue 
                         }
                         if(coordinateFound){
                             break
                         }
-                        const currentCoordinate = arrayToString(directions[i]);//Needs to be string to use as key for squareMap
-                        const currentSquare = squareMap.get(currentCoordinate);
                         //If square is hit, keep attacking direction until sunk or miss
                         if (currentSquare.classList.contains('hit')) {
                             //Use opposite side as target
@@ -269,6 +269,7 @@ export default class Game{
                 console.log("🚀 ~ Game ~ makeAttack ~ coordinateFound:", coordinateFound)
                 attackDone = true;
                 this.defendingPlayer.gameboard.receiveAttack(coordinate);
+                this.checkWinCon()
                 return; // Exit the function entirely
             }
             //If no other square is hit, make random attack
@@ -276,10 +277,12 @@ export default class Game{
                 console.log("🚀 ~ Game ~ makeAttack ~ Attack was Random:", coordinate)
                 coordinate = this.randomCoordinate()
                 this.defendingPlayer.gameboard.receiveAttack(coordinate)
+                this.checkWinCon()
             }
         }
         if (this.attackingPlayer === this.humanPlayer){
             this.defendingPlayer.gameboard.receiveAttack(coordinate)
+            this.checkWinCon()
         }
     }
 

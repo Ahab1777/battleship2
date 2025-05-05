@@ -1,4 +1,3 @@
-import { forceCoordinateToArray } from "./utils.js";
 import { dragEnd, dragStart } from "./utils.js";
 
 export function render(match){
@@ -85,7 +84,51 @@ export function render(match){
     })
 
     //Render enemy fleet status
-    const fleetStatusNode = document.querySelectorAll('.classShip');
+    const fleetStatus = document.querySelector('.ships-remaining');
+    const enemyFleet = match.computerPlayer.gameboard._fleet;
+    let shipsRemaining = 0;
+    shipsRemaining = enemyFleet.reduce((acc, currentShip) => {
+        if (currentShip.isSunk) {
+            return acc;
+        }
+        return acc + 1;
+    }, 0);
+    
+
+
+    // Render display based on fleet status
+    const flipShipBtn = document.querySelector('.flip-btn');
+    const computerGrid = document.querySelector('.computer-team')
+    if(match.humanPlayer.gameboard._fleet.length === match.standardFleet.length){
+        flipShipBtn.disabled = true;// Activate flip btn depending on game state
+        fleetStatus.textContent = shipsRemaining //Display remaining enemy ships
+        computerGrid.style.display = 'flex'
+    }
+    else{
+        flipShipBtn.disabled = false;// Deactivate flip btn depending on game state
+        fleetStatus.textContent = 'Drag and drop your ships first!' // Tell player to place ships first
+        computerGrid.style.display = 'none'
+        console.log("🚀 ~ render ~ computerGrid:", computerGrid)
+        console.log("🚀 ~ render ~ computerGrid.display:", computerGrid.display)
+
+    }
+
+
+    //If game ends, present winner
+    const scoreContainer = document.querySelector('.score');
+    if (match.gameHasEnded) {
+        let winnerMessage;
+        if (match.winner === match.humanPlayer) {
+            winnerMessage = "Congratulations! You have beaten the computer."
+        }
+        else if (match.winner === match.computerPlayer) {
+            winnerMessage = "The computer has won this time. Try again!"
+        }
+        scoreContainer.textContent = winnerMessage;
+    }
+    else {
+
+    }
     
 
 }
@@ -107,7 +150,6 @@ export function resetDOM(match){
     //2 - Empty docked ships fleet-container and refill it with standardFleet
     const fleet = document.querySelector('.fleet');
     fleet.dataset.direction = 'horizontal';
-    console.log('resetDOM set the class by reading dataset')
     
     //2.2 - fill docks with ships
     fleet.innerHTML = '';
@@ -134,9 +176,7 @@ export function resetDOM(match){
         fleet.append(newShipElement)
     })
 
-    //3 - Clear game status display
-    const display = document.querySelector('.game-status');
-    display.textContent = '';
+
 
     //Reset buttons event handlers
     const flipShipBtn = document.querySelector('.flip-btn')
