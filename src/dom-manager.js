@@ -37,26 +37,46 @@ export function render(match){
         const board = player.gameboard
         const shipAtCoordinate = board.getShipAt(coordinate);
         //1 - Intact ship
-        if (shipAtCoordinate && !shipAtCoordinate.isSunk) {
+        if (
+            shipAtCoordinate && 
+            !shipAtCoordinate.isSunk && 
+            !board.isMiss(coordinate)) 
+            {
             square.classList.add('ship');
+            square.style.pointerEvents = "none";//Make square unclickable
+
         }
         //2 - is hit - missed
-        if (board.isMiss(coordinate)) {
+        if (
+            board.isMiss(coordinate)) 
+            {
             square.classList.add('miss')
+            square.style.pointerEvents = "none";//Make square unclickable
+
         }
         //3 - is hit - ship hit
-        if (shipAtCoordinate && board.isSquareHit(coordinate)) {
+        if (
+            shipAtCoordinate && 
+            board.isSquareHit(coordinate) && 
+            !shipAtCoordinate.isSunk) 
+            {
             square.classList.add('hit')
             square.classList.remove('ship');
+            square.style.pointerEvents = "none";//Make square unclickable
+
         }
         //4 - is hit - sunk
-        if (shipAtCoordinate && shipAtCoordinate.isSunk) {
+        if (
+            shipAtCoordinate && 
+            shipAtCoordinate.isSunk) 
+            {
             square.classList.add('sunk');
             square.classList.remove('hit')
             square.classList.remove('ship');
+            square.style.pointerEvents = "none";//Make square unclickable
+
             
         }
-        
     });
 
     //3 - Render computer grid
@@ -71,14 +91,20 @@ export function render(match){
             square.classList.add('miss')
         }
         //2 - is hit - ship hit
-        if (board.isSquareHit(coordinate) && board.getShipAt(coordinate)) {
+        if (
+            board.isSquareHit(coordinate) && 
+            board.getShipAt(coordinate)) 
+            {
             square.classList.add('hit')
+
         }
         //3 - is hit - sunk
         if (board.getShipAt(coordinate)?.isSunk) {
             square.classList.remove('hit')
             square.classList.add('sunk');
         }
+
+        
         
 
     })
@@ -108,9 +134,6 @@ export function render(match){
         flipShipBtn.disabled = false;// Deactivate flip btn depending on game state
         fleetStatus.textContent = 'Drag and drop your ships first!' // Tell player to place ships first
         computerGrid.style.display = 'none'
-        console.log("🚀 ~ render ~ computerGrid:", computerGrid)
-        console.log("🚀 ~ render ~ computerGrid.display:", computerGrid.display)
-
     }
 
 
@@ -118,17 +141,17 @@ export function render(match){
     const scoreContainer = document.querySelector('.score');
     if (match.gameHasEnded) {
         let winnerMessage;
+        //Block all interactions with board
+        
         if (match.winner === match.humanPlayer) {
-            winnerMessage = "Congratulations! You have beaten the computer."
+            winnerMessage = "Congratulations! <br>You have beaten the computer."
         }
         else if (match.winner === match.computerPlayer) {
-            winnerMessage = "The computer has won this time. Try again!"
+            winnerMessage = "The computer has won this time.<br>Try again!"
         }
-        scoreContainer.textContent = winnerMessage;
+        scoreContainer.innerHTML = winnerMessage;
     }
-    else {
-
-    }
+   
     
 
 }
@@ -176,6 +199,9 @@ export function resetDOM(match){
         fleet.append(newShipElement)
     })
 
+    //Reset score display
+    const scoreContainer = document.querySelector('.score');
+    scoreContainer.innerHTML = '<div>Enemy ships remaining: <div class="ships-remaining"></div></div>'
 
 
     //Reset buttons event handlers

@@ -130,7 +130,7 @@ export default class Game{
                 if (startRow === endRow) { //ship is horizontal
                     for (let index = 0; index < battleship.size; index++) {
                         let currentCoordinate = arrayToString([startRow, startCol + index])
-                        if (isCoordinateOutOfBounds(currentCoordinate)) {
+                        if (isCoordinateOutOfBounds(currentCoordinate) && this.computerPlayer.gameboard.getShipAt(currentCoordinate)) {
                             isOutOfBounds = true
                             continue
                         }
@@ -174,7 +174,6 @@ export default class Game{
             coordinate = this.randomCoordinate()
             //Smart opponent
             //Is there a ship visible and unsunk??
-            let attackDone = false;
             let coordinateFound = false;
             const playerSquareNodeList = document.querySelectorAll(`.player-container .square`);
             const squareMap = new Map();//Create map of squares to easily find squares by the coordinate(string)
@@ -267,7 +266,6 @@ export default class Game{
                 console.log("🚀 ~ Game ~ makeAttack  ATTACK DONE - String ->!", forceCoordinateToArray(coordinate))
                 console.log("🚀 ~ Game ~ makeAttack ~ !isCoordinateOutOfBounds(coordinate):", !isCoordinateOutOfBounds(coordinate))
                 console.log("🚀 ~ Game ~ makeAttack ~ coordinateFound:", coordinateFound)
-                attackDone = true;
                 this.defendingPlayer.gameboard.receiveAttack(coordinate);
                 this.checkWinCon()
                 return; // Exit the function entirely

@@ -52,11 +52,24 @@ newGameBtn.addEventListener('click', () => {
 
             //Check if all ships are positioned to start the game
             if (totalShips === playerGameboard._fleet.length) {
-                
+                //Remove pointer styles once fleet is positioned
+                const playerSquareNodeList = document.querySelectorAll(`.player-container .square`)
+                playerSquareNodeList.forEach(square => {
+                    square.style.pointerEvents = "none";
+                })
                 //Add attack handler to enemy grid
                 const computerSquareNodeList = document.querySelectorAll(`.computer-container .square`)
                 computerSquareNodeList.forEach(square => {
                     square.addEventListener('click', () => {
+                        //If square already hit, prevent another hit
+                        if(
+                            square.classList.contains('miss') || 
+                            square.classList.contains('hit') || 
+                            square.classList.contains('sunk'))
+                            {
+                                return
+                            }
+
                         //Add attack function
                         const coordinate = square.getAttribute('data-pos');
                 
@@ -101,6 +114,4 @@ newGameBtn.addEventListener('click', () => {
         
     })
 
-    //Check wincon
-    
 })

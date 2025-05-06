@@ -80,7 +80,6 @@ export function forceCoordinateToArray(coordinate){
 export function dragStart(e) {
     //Grab squares within the target ship
     const ship = e.currentTarget;
-    console.log(`[${new Date().toISOString()}] 🚀 ~ dragStart ~ ship:`, ship);
     const squaresWithin = Array.from(ship.children);
 
     //Style squares
@@ -130,8 +129,6 @@ export function dragStart(e) {
     //Delay hide class to be added for dragging animation
     setTimeout(() => {
         ship.classList.add('hide');
-        console.log(`[${new Date().toISOString()}] 🚀 ~ setTimeout ~ dragStart added 'hide'`);
-        console.log(`[${new Date().toISOString()}] 🚀 setTimeout ~ dragStart ~ ship:`, ship);
     }, 0);
 }
 
@@ -139,7 +136,6 @@ export function dragEnd(e) {
     e.preventDefault();
     //Grab squares within the target ship
     const ship = e.currentTarget;
-    console.log(`[${new Date().toISOString()}] 🚀 ~ dragEnd ~ ship:`, ship);
     const squaresWithin = Array.from(ship.children);
 
     //Style squares within ship
@@ -163,19 +159,15 @@ export function dragEnd(e) {
     setTimeout(() => {
         ship.classList.remove('hide');
         ship.classList.remove('dragging-ship');
-        console.log(`[${new Date().toISOString()}] 🚀 ~ setTimeout ~ dragEnd removed 'hide' and 'dragging-ship'`);
-        console.log(`[${new Date().toISOString()}] 🚀 setTimeout ~ dragEnd ~ ship:`, ship);
     }, 100);
 }
 
 export function dragEnter(e) {
-    console.log(`[${new Date().toISOString()}] 🚀 ~ dragEnter ~ dragEnter:`);
     e.preventDefault();
     //e.target.classList.add('drag-over');
 }
 
 export function dragOver(e, getShipAtFunction) {
-    console.log(`[${new Date().toISOString()}] 🚀 ~ dragOver ~ dragOver:`);
     e.preventDefault();
 
     //Add dropEffect
@@ -249,7 +241,6 @@ export function dragOver(e, getShipAtFunction) {
 }
 
 export function dragLeave(e) {
-    console.log(`[${new Date().toISOString()}] dragleave`);
     const shipBeingDragged = document.querySelector('.dragging-ship');
 
     const playerSquareNodeList = document.querySelectorAll('.player-container .square');
@@ -260,7 +251,6 @@ export function dragLeave(e) {
 }
 
 export function drop(e, placeShipFunction, getShipAtFunction) {
-    console.log(`[${new Date().toISOString()}] 🚀 ~ drop ~ drop:`);
     e.preventDefault();
 
     //1 - Create node of square from grid
@@ -348,7 +338,6 @@ export function drop(e, placeShipFunction, getShipAtFunction) {
 }
 
 export function flipShips() {
-    console.log(`[${new Date().toISOString()}] 🚀 ~ flipShips ~ Flipping ships`);
     //Identify current position by fleet container direction dataset info
     const fleet = document.querySelector('.fleet');
     const targetDirection = fleet.dataset.direction === 'vertical' ? 'horizontal' : 'vertical';

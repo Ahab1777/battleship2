@@ -42,10 +42,12 @@ footer{
 .score{
     grid-area: 2 / 1 / 4 / 3;
     margin-left: 50px;
-
+    font-size: 3rem;
+    font-weight: bold;
     display: flex;
     justify-content: center; /* Horizontal centering */
     align-items: center; 
+    text-align: center;
 }
 
 .score > h3{
@@ -62,7 +64,7 @@ footer{
 
 .ships-remaining{
     color: blue;
-    font-size: 2rem;
+    font-size: 4rem;
 }
 
 .new-game-btn-container{
@@ -271,6 +273,8 @@ button:focus-visible {
 .square:not(.miss):not(.hit):not(.sunk):hover {
     cursor: pointer;
 }
+
+
 
 /* Drag and Drop */
 
