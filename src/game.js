@@ -272,7 +272,6 @@ export default class Game{
             }
             //If no other square is hit, make random attack
             if (!coordinateFound) {
-                console.log("🚀 ~ Game ~ makeAttack ~ Attack was Random:", coordinate)
                 coordinate = this.randomCoordinate()
                 this.defendingPlayer.gameboard.receiveAttack(coordinate)
                 this.checkWinCon()

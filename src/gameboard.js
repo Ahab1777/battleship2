@@ -17,9 +17,7 @@ export default class Gameboard{
         const convertedCoordinate = forceCoordinateToArray(coordinate)
         const [row, col] = convertedCoordinate;
         const square = this._board[row][col];
-        console.log("🚀 ~ Gameboard ~ receiveAttack ~ square before hit", square)
         square.hitSquare();
-        console.log("🚀 ~ Gameboard ~ receiveAttack ~ square after hit:", square)
     }
 
     getSquareAt(coordinate){

@@ -21,7 +21,7 @@ newGameBtn.addEventListener('click', () => {
     //Place computer ships
     resetDOM(match)
     match.positionShips()
-    render(match)
+    
     
 
     //Add flip ships button
@@ -37,7 +37,7 @@ newGameBtn.addEventListener('click', () => {
         //...In with the new.
         const getShipAtFunction = player.gameboard.getShipAt.bind(player.gameboard);
         const placeShipFunction = player.gameboard.placeShip.bind(player.gameboard)
-
+        
 
         square.addEventListener('dragenter', dragEnter)
         square.addEventListener('dragover', (e) => {
@@ -61,6 +61,10 @@ newGameBtn.addEventListener('click', () => {
                 const computerSquareNodeList = document.querySelectorAll(`.computer-container .square`)
                 computerSquareNodeList.forEach(square => {
                     square.addEventListener('click', () => {
+                        //If game ended, prevent click
+                        
+                        if (match.gameHasEnded) return;
+
                         //If square already hit, prevent another hit
                         if(
                             square.classList.contains('miss') || 
@@ -76,6 +80,8 @@ newGameBtn.addEventListener('click', () => {
                         match.makeAttack(coordinate);
                         render(match);
                         match.checkWinCon();
+                        console.log("🚀 ~ square.addEventListener ~ match:", match)
+
                         if (match.gameHasEnded) return; // Stop if the game has ended
                         match.togglePlayers();
                 
@@ -92,7 +98,7 @@ newGameBtn.addEventListener('click', () => {
                         }, 500); // Match the delay of the computer's attack
                 
                         // Disable the clicked square
-                        square.style.pointerEvents = "none";
+                        // square.style.pointerEvents = "none";
                         // Computer's attack
                         setTimeout(() => {
                             // Add a delay to simulate the computer "thinking"
@@ -110,8 +116,6 @@ newGameBtn.addEventListener('click', () => {
             }
             render(match)
         });
-
-        
     })
-
+    render(match)
 })

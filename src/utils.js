@@ -78,6 +78,7 @@ export function forceCoordinateToArray(coordinate){
 }
 
 export function dragStart(e) {
+    // console.log('dragStart called');
     //Grab squares within the target ship
     const ship = e.currentTarget;
     const squaresWithin = Array.from(ship.children);
@@ -133,6 +134,7 @@ export function dragStart(e) {
 }
 
 export function dragEnd(e) {
+    // console.log('dragEnd called');
     e.preventDefault();
     //Grab squares within the target ship
     const ship = e.currentTarget;
@@ -163,11 +165,13 @@ export function dragEnd(e) {
 }
 
 export function dragEnter(e) {
+    // console.log('dragEnter called');
     e.preventDefault();
     //e.target.classList.add('drag-over');
 }
 
 export function dragOver(e, getShipAtFunction) {
+    // console.log('dragOver called');
     e.preventDefault();
 
     //Add dropEffect
@@ -241,6 +245,7 @@ export function dragOver(e, getShipAtFunction) {
 }
 
 export function dragLeave(e) {
+    console.log('dragLeave called');
     const shipBeingDragged = document.querySelector('.dragging-ship');
 
     const playerSquareNodeList = document.querySelectorAll('.player-container .square');
@@ -251,6 +256,7 @@ export function dragLeave(e) {
 }
 
 export function drop(e, placeShipFunction, getShipAtFunction) {
+    // console.log('drop called');
     e.preventDefault();
 
     //1 - Create node of square from grid

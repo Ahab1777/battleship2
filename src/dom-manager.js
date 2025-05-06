@@ -162,12 +162,14 @@ export function resetDOM(match){
     const allSquares = document.querySelectorAll('.square');
     allSquares.forEach(square => {
         square.className = 'square';
+        square.style.pointerEvents = "auto";//Make square unclickable
     })
 
     //1.2 - Remove all listeners from squares by cloning them and replacing the original by the clone
     allSquares.forEach(square => {
         const newSquare = square.cloneNode(true);
         square.parentNode.replaceChild(newSquare, square)
+        square.pointerEvents = 'auto'
     })
 
     //2 - Empty docked ships fleet-container and refill it with standardFleet
