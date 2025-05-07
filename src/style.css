@@ -2,6 +2,12 @@
 
 :root {
     --square-side: 40px;
+    --blue: rgb(0, 33, 255);
+    --red: #ff272f;
+    --battleship-grey: #848482;
+    --green: #034c3c;
+    --seal-brown: #582707;
+
     
 }
 
@@ -9,15 +15,44 @@
     margin: 0px;
     padding: 0;
     box-sizing: border-box;
-    background-color: cadetblue;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-body{
+body {
     margin: 60px;
-}
+
+    background: linear-gradient(-45deg, #1e90ff, #2454FF, #2b4593);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
+    min-height: 100vh;
+    margin: 0;
+  }
+  
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+
 
 footer{
     text-align: center;
+    margin-bottom: 20px;
+}
+
+h1{
+    font-size: 5rem;
+    font-weight: bold;
+}
+
+.header{
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height:fit-content;
+    color: white;
 }
 
 /* Display */
@@ -25,23 +60,22 @@ footer{
 .game-display {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, calc(2 * var(--square-side))) 1fr;
+    grid-template-rows: min-content 1fr var(--square-side) min-content;
 }
 
-.game-status {
+/* .game-status {
     grid-area: 2 / 1 / 3 / 4;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 50px;
     color: white;
-}
+} */
 
 
 /* Display - Score */
 .score{
-    grid-area: 2 / 1 / 4 / 3;
-    margin-left: 50px;
+    grid-area: 2 / 2 / 3 / 4;
     font-size: 3rem;
     font-weight: bold;
     display: flex;
@@ -63,7 +97,7 @@ footer{
 }
 
 .ships-remaining{
-    color: blue;
+    color: var(--blue);
     font-size: 4rem;
 }
 
@@ -72,13 +106,32 @@ footer{
 }
 
 .flip-btn-container{
-    grid-area: 2 / 3 / 3 / 4;
+    grid-area: 3 / 2 / 4 / 4;
+}
+
+.flip-btn{
+    transition: all 500ms ease 0ms;
+
+}
+
+.flip-btn:hover{
+    transform: scale(1.1);
+}
+
+.flip-btn:disabled{
+    transform: none;
+    transition: none;
 }
 
 .fleet-container{
-    grid-area: 3 / 3 / 4 / 4;
+    grid-area: 4 / 2 / 5 / 4;
     padding: 10px;
     border: 1px dotted black;
+    background-color: rgba(0, 33, 255, 0.2);
+    width:max-content;
+    height: max-content;
+    justify-self: center;
+    margin: 10px;
 }
 
 
@@ -102,11 +155,20 @@ button{
 
 .new-game{
     width: 250px;
+    margin-top: 20px;
+    transition: all 500ms ease 0ms;
 }
+
+.new-game:hover{
+    transform: scale(1.1);
+}
+
+
+
 
 /* make button react when hovered and clicked */
 button:hover {
-    background-color: blue;
+    background-color: var(--blue);
 }
 button:active {
     background-color: darkblue;
@@ -123,13 +185,7 @@ button:focus-visible {
     outline-offset: 2px;
 }
 
-.header{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    color: white;
-}
+
 
 .fleet{
     justify-self: center;
@@ -146,6 +202,15 @@ button:focus-visible {
     width: fit-content;
     height: fit-content;
     display:flex;
+
+   
+}
+
+.docked-ship:hover{
+    animation-duration: 0.1s;
+    animation-name: vibrate;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 .horizontal {
@@ -154,6 +219,16 @@ button:focus-visible {
 
 .vertical {
     flex-direction: column;
+}
+
+@keyframes vibrate{
+    from {
+        transform: rotate(1deg);
+    }
+
+    to {
+        transform: rotate(-1deg);
+    }
 }
 
 
@@ -166,6 +241,14 @@ button:focus-visible {
     display: flex;
     flex-wrap: wrap;
     margin-top: 20px;
+    justify-content: center;
+}
+
+.battle-container{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: center;
 }
 
 .team-container {
@@ -176,16 +259,21 @@ button:focus-visible {
     align-items: center;
 }
 
-.computer-team{
-    /* setting none so that it only appears after ships are set */
-    display: none;
-}
+
 
 .player-container, .computer-container{
     display: grid;
     grid-template-columns: repeat(11, var(--square-side));
     grid-template-rows: repeat(11, var(--square-side));
     margin: 20px;
+}
+
+.computer-team {
+    margin-left: auto;
+}
+
+.player-team {
+    margin-right: auto;
 }
 
 .columns-container{
@@ -198,7 +286,7 @@ button:focus-visible {
 .column {
     width: var(--square-side);
     height: var(--square-side);
-    border: 1px solid red;
+    border: 1px solid var(--red);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -218,7 +306,7 @@ button:focus-visible {
 .row {
     width: var(--square-side);
     height: var(--square-side);
-    border: 1px solid blue;
+    border: 1px solid var(--blue);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -250,23 +338,23 @@ button:focus-visible {
 }
 
 .miss {
-    background-color: royalblue;
+    background-color: var(--blue);
 }
 
 .hit {
-    background-color: red;
+    background-color: var(--red);
 }
 
 .sunk {
-    background-color: darkred;
+    background-color: var(--seal-brown);
 }
 
 .ship{
-    background-color: darkgreen;
+    background-color: var(--green);
 }
 
 .invalid-zone{
-    border: dashed 3px rgb(255, 0, 0);
+    border: dashed 3px var(--red);
 
 }
 
@@ -279,7 +367,7 @@ button:focus-visible {
 /* Drag and Drop */
 
 .drag-over {
-    border: dashed 3px blue;
+    border: dashed 3px var(--blue);
 }
 
 .hide {
